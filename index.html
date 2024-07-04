@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flag Guessing Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .game-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .flag {
+            font-size: 100px;
+            margin-bottom: 20px;
+        }
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .feedback {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .score {
+            margin-top: 10px;
+        }
+        #endRound {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div id="gamePlay">
+            <h1>Flag Guessing Game</h1>
+            <div class="score">Round: <span id="round">1</span> | Question: <span id="question">1</span>/10 | Score: <span id="score">0</span></div>
+            <div class="flag" id="flag"></div>
+            <div class="options" id="options"></div>
+            <div class="feedback" id="feedback"></div>
+        </div>
+        <div id="endRound">
+            <h1>Round <span id="endRoundNumber"></span> Completed!</h1>
+            <p>Your score: <span id="finalScore"></span> out of 10</p>
+            <button onclick="startNewRound()">Start New Round</button>
+        </div>
+    </div>
+
+    <script>
+        const countries = [
+            { name: 'United States', flag: '🇺🇸' },
+            { name: 'Canada', flag: '🇨🇦' },
+            { name: 'United Kingdom', flag: '🇬🇧' },
+            { name: 'France', flag: '🇫🇷' },
+            { name: 'Germany', flag: '🇩🇪' },
+            { name: 'Italy', flag: '🇮🇹' },
+            { name: 'Japan', flag: '🇯🇵' },
+            { name: 'Australia', flag: '🇦🇺' },
+            { name: 'Brazil', flag: '🇧🇷' },
+            { name: 'India', flag: '🇮🇳' },
+            { name: 'China', flag: '🇨🇳' },
+            { name: 'Russia', flag: '🇷🇺' },
+            { name: 'Mexico', flag: '🇲🇽' },
+            { name: 'Spain', flag: '🇪🇸' },
+            { name: 'South Korea', flag: '🇰🇷' },
+        ];
+
+        let currentRound = 1;
+        let currentQuestion = 1;
+        let score = 0;
+        let currentFlag;
+        let options;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function generateQuestion() {
+            const shuffledCountries = shuffleArray([...countries]);
+            currentFlag = shuffledCountries[0];
+            options = shuffleArray([currentFlag, ...shuffledCountries.slice(1, 4)]);
+
+            document.getElementById('flag').textContent = currentFlag.flag;
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            options.forEach(country => {
+                const button = document.createElement('button');
+                button.textContent = country.name;
+                button.onclick = () => handleAnswer(country);
+                optionsContainer.appendChild(button);
+            });
+
+            document.getElementById('round').textContent = currentRound;
+            document.getElementById('question').textContent = currentQuestion;
+            document.getElementById('score').textContent = score;
+            document.getElementById('feedback').textContent = '';
+        }
+
+        function handleAnswer(selectedCountry) {
+            const buttons = document.querySelectorAll('#options button');
+            buttons.forEach(button => button.disabled = true);
+
+            if (selectedCountry.name === currentFlag.name) {
+                score++;
+                document.getElementById('feedback').textContent = 'Correct!';
+                document.getElementById('feedback').style.color = 'green';
+            } else {
+                document.getElementById('feedback').textContent = `Wrong! The correct answer was ${currentFlag.name}.`;
+                document.getElementById('feedback').style.color = 'red';
+            }
+
+            document.getElementById('score').textContent = score;
+
+            setTimeout(() => {
+                if (currentQuestion < 10) {
+                    currentQuestion++;
+                    generateQuestion();
+                } else {
+                    endRound();
+                }
+            }, 2000);
+        }
+
+        function endRound() {
+            document.getElementById('gamePlay').style.display = 'none';
+            document.getElementById('endRound').style.display = 'block';
+            document.getElementById('endRoundNumber').textContent = currentRound;
+            document.getElementById('finalScore').textContent = score;
+        }
+
+        function startNewRound() {
+            currentRound++;
+            currentQuestion = 1;
+            score = 0;
+            document.getElementById('gamePlay').style.display = 'block';
+            document.getElementById('endRound').style.display = 'none';
+            generateQuestion();
+        }
+
+        generateQuestion();
+    </script>
+</body>
+</html>

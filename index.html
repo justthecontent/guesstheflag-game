@@ -14,10 +14,15 @@
             margin: 0;
             background-color: #f0f0f0;
         }
-        .score {
+        .score, .round, .question {
             margin-top: 10px;
-            font-size: 48px;
             font-weight: bold;
+        }
+        .score {
+            font-size: 48px;
+        }
+        .round, .question {
+            font-size: 24px;
         }
         .correct {
             animation: correctAnimation 1s ease-in-out;
@@ -84,8 +89,8 @@
         <div id="gamePlay">
             <h1>Flag Guessing Game</h1>
             <h2>Made by Krishna</h2>
-            <div class="score">Round: <span id="round">1</span></div>
-            <div class="score">Question: <span id="question">1</span>/10</div>
+            <div class="round">Round: <span id="round">1</span></div>
+            <div class="question">Question: <span id="question">1</span>/10</div>
             <div class="score">Score: <span id="score">0</span></div>
             <div class="flag" id="flag"></div>
             <div class="options" id="options"></div>

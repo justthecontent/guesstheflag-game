@@ -53,13 +53,14 @@
         .score {
             margin-top: 10px;
         }
-        #endRound {
+        #endRound, #loading {
             display: none;
         }
     </style>
 </head>
 <body>
     <div class="game-container">
+        <div id="loading">Loading...</div>
         <div id="gamePlay">
             <h1>Flag Guessing Game</h1>
             <div class="score">Round: <span id="round">1</span> | Question: <span id="question">1</span>/10 | Score: <span id="score">0</span></div>
@@ -75,24 +76,7 @@
     </div>
 
     <script>
-        const countries = [
-            { name: 'United States', flag: '🇺🇸' },
-            { name: 'Canada', flag: '🇨🇦' },
-            { name: 'United Kingdom', flag: '🇬🇧' },
-            { name: 'France', flag: '🇫🇷' },
-            { name: 'Germany', flag: '🇩🇪' },
-            { name: 'Italy', flag: '🇮🇹' },
-            { name: 'Japan', flag: '🇯🇵' },
-            { name: 'Australia', flag: '🇦🇺' },
-            { name: 'Brazil', flag: '🇧🇷' },
-            { name: 'India', flag: '🇮🇳' },
-            { name: 'China', flag: '🇨🇳' },
-            { name: 'Russia', flag: '🇷🇺' },
-            { name: 'Mexico', flag: '🇲🇽' },
-            { name: 'Spain', flag: '🇪🇸' },
-            { name: 'South Korea', flag: '🇰🇷' },
-        ];
-
+        let countries = [];
         let currentRound = 1;
         let currentQuestion = 1;
         let score = 0;
@@ -169,7 +153,25 @@
             generateQuestion();
         }
 
-        generateQuestion();
+        // Fetch the flags data and start the game
+        fetch('flags.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch flags data");
+                }
+                return response.json();
+            })
+            .then(data => {
+                countries = data.countries;
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('gamePlay').style.display = 'block';
+                generateQuestion();
+            })
+            .catch(error => {
+                console.error('Error fetching flags data:', error);
+                document.getElementById('loading').textContent = 'Error loading game data. Please try again later.';
+            });
+
     </script>
 </body>
 </html>

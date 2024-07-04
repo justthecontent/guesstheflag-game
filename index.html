@@ -14,6 +14,26 @@
             margin: 0;
             background-color: #f0f0f0;
         }
+        .score {
+            margin-top: 10px;
+            font-size: 36px;
+        }
+        .correct {
+            animation: correctAnimation 1s ease-in-out;
+        }
+        .wrong {
+            animation: wrongAnimation 1s ease-in-out;
+        }
+        @keyframes correctAnimation {
+            0% { background-color: white; }
+            50% { background-color: green; }
+            100% { background-color: white; }
+        }
+        @keyframes wrongAnimation {
+            0% { background-color: white; }
+            50% { background-color: red; }
+            100% { background-color: white; }
+        }
         .game-container {
             background-color: white;
             border-radius: 8px;
@@ -128,9 +148,17 @@
             if (selectedCountry.name === currentFlag.name) {
                 score++;
                 document.getElementById('feedback').textContent = 'Correct!';
+                document.getElementById('feedback').classList.add('correct');
+                setTimeout(() => {
+                    document.getElementById('feedback').classList.remove('correct');
+                }, 1000);
                 document.getElementById('feedback').style.color = 'green';
             } else {
                 document.getElementById('feedback').textContent = `Wrong! The correct answer was ${currentFlag.name}.`;
+                document.getElementById('feedback').classList.add('wrong');
+                setTimeout(() => {
+                    document.getElementById('feedback').classList.remove('wrong');
+                }, 1000);
                 document.getElementById('feedback').style.color = 'red';
             }
 

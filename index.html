@@ -117,7 +117,7 @@
         }
 
         function generateQuestion() {
-            const availableCountries = currentRound <= 5 
+            const availableCountries = currentRound <= 2 
                 ? countries.filter(country => popularFlags.includes(country.name))
                 : countries;
             const shuffledCountries = shuffleArray([...availableCountries]);

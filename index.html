@@ -77,6 +77,10 @@
 
     <script>
         let countries = [];
+        const popularFlags = [
+            "United States", "Canada", "United Kingdom", "France", "Germany",
+            "Italy", "Japan", "Australia", "Brazil", "India"
+        ];
         let currentRound = 1;
         let currentQuestion = 1;
         let score = 0;
@@ -92,7 +96,10 @@
         }
 
         function generateQuestion() {
-            const shuffledCountries = shuffleArray([...countries]);
+            const availableCountries = currentRound <= 5 
+                ? countries.filter(country => popularFlags.includes(country.name))
+                : countries;
+            const shuffledCountries = shuffleArray([...availableCountries]);
             currentFlag = shuffledCountries[0];
             options = shuffleArray([currentFlag, ...shuffledCountries.slice(1, 4)]);
 
